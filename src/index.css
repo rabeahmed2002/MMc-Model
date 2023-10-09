@@ -1,0 +1,106 @@
+/* colors used : 
+#4b5b76, white
+*/
+*{
+  margin: 0%;
+  padding: 0%;
+}
+body {
+  background-image: url(bg.png);
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: cover;
+  background-attachment: fixed;
+  color: white;
+  /* font-family: 'Young Serif', serif; */
+  font-family: 'Cute Font', cursive;
+  font-size: large;
+}
+.cntnr{
+  display: flex;
+}
+.optn {
+  width: 22vw;
+  height: 85vh;
+  position: fixed;
+  border: 1px solid white;
+  margin: 50px;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  background-color: rgba(255, 255, 255, 0.2);
+  padding: 20px;
+  border-radius: 15px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  overflow-y: auto;
+}
+.model{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 68vw;
+  height: 85vh;
+  padding: 20px;
+  position: fixed;
+  right: 0%;
+  border: 1px solid white;
+  margin: 50px;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  background-color: rgba(255, 255, 255, 0.2);
+  border-radius: 15px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  overflow-y: auto;
+}
+input{
+  width: 10vw;
+  border-radius: 5px;
+  border: 1px solid white;
+  color: #4b5b76;
+  text-align: center;
+}
+.btn{
+  width: 10vw;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.upr{
+  margin-top: auto;
+}
+table{
+  background-color: transparent;
+  background: none;
+}
+
+
+/* .gantt-charts {
+  display: flex;
+  flex-direction: column;
+} */
+/* .gantt-chart {
+  position: relative;
+  height: 300px;
+ 
+  margin-top: 20px;
+} */
+
+/* .server {
+  position: absolute;
+  height: 100%;
+} */
+
+.task {
+  position: absolute;
+  height: fit-content;
+  width: fit-content;
+  border: 1px solid white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.server-bar {
+  margin-bottom: 20vh;
+  padding: 20px; /* Adjust the margin as needed */
+}
