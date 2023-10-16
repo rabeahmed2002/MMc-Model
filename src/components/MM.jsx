@@ -224,17 +224,17 @@ export default function PoissonDistribution() {
 //   setArrivalTimes(generatedArrivalTimes);
 // };
 const generateArrivalTimes = () => {
-  // const generatedArrivalTimes = [0]; // First arrival time is 0
+  const generatedArrivalTimes = [0]; // First arrival time is 0
   let prevArrivalTime = 0;
 
   for (let i = 1; i < interArrivalTimes.length; i++) {
-    const interArrivalTime = interArrivalTimes[i - 1];
+    const interArrivalTime = interArrivalTimes[i];
     const currentArrivalTime = prevArrivalTime + interArrivalTime;
-    // generatedArrivalTimes.push(currentArrivalTime);
+    generatedArrivalTimes.push(currentArrivalTime);
     prevArrivalTime = currentArrivalTime;
   }
 
-  setArrivalTimes(interArrivalTimes+prevArrivalTime);
+  setArrivalTimes(generatedArrivalTimes);
 };
 
 
