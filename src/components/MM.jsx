@@ -20,7 +20,7 @@ function factorial(n) {
 }
 
 export default function PoissonDistribution() {
-  const [numServers, setNumServers] = useState("");
+  const [numServers, setNumServers] = useState(1);
   const [servers, setServers] = useState([]);
   const [serversData, setServersData] = useState([]);
 
@@ -35,10 +35,10 @@ export default function PoissonDistribution() {
   const [ganttData, setGanttData] = useState([]);
 
   //for lcg
-  const [A, setA] = useState("");
-  const [Z0, setZ0] = useState("");
-  const [C, setC] = useState("");
-  const [M, setM] = useState("");
+  const [A, setA] = useState(55);
+  const [Z0, setZ0] = useState(10112166);
+  const [C, setC] = useState(9);
+  const [M, setM] = useState(1994);
   const [a, setAValue] = useState(1);
   const [b, setBValue] = useState(3);
   const [n, setN] = useState(10);
@@ -308,7 +308,7 @@ const generateArrivalTimes = () => {
         Z = R;
     }
 
-    const priorities = rnValues.map((rn) => (3 - 1) * rn + 1); // (b - a) * rn + a
+    const priorities = rnValues.map((rn) => (b - a) * rn + a); // (b - a) * rn + a
     const roundedPriorities = priorities.map((priority) =>
         Math.round(priority)
     );
@@ -420,7 +420,7 @@ const generateArrivalTimes = () => {
   return (
     <div className="text-center upr">
       {/* {serversData.length > 0 && <GanttChart serversData={serversData} />} */}
-      <h4 className="p-4">MMc Simulation Model</h4>
+      <h4 className="p-4">MM∞ Simulation Model</h4>
       <label>
         Enter Number of Servers:
         <input
@@ -496,6 +496,24 @@ const generateArrivalTimes = () => {
             type="number"
             value={n}
             onChange={(e) => setN(e.target.value)}
+          />
+        </label>
+        <br />
+        <label>
+          Enter a:
+          <input
+            type="number"
+            value={a}
+            onChange={(e) => setAValue(e.target.value)}
+          />
+        </label>
+        <br />
+        <label>
+          Enter b:
+          <input
+            type="number"
+            value={b}
+            onChange={(e) => setBValue(e.target.value)}
           />
         </label>
       
