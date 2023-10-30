@@ -83,6 +83,34 @@ export default function PoissonDistribution() {
   //   departureTimes,
   //   randomPriorities,
   // ]);
+  
+  const calculateCumulativeProbability = () => {
+    let cumulativeProb = 0;
+    const tempData = [];
+
+    for (let k = 0; ; k++) {
+      const poissonProb = calculatePoissonProbability(k, parseFloat(lambda));
+      cumulativeProb += poissonProb;
+
+      const lookup =
+        tempData.length === 0
+          ? 0
+          : tempData[tempData.length - 1].cumulativeProb;
+
+      tempData.push({
+        interval: k,
+        cumulativeProb: cumulativeProb,
+        lookup: lookup,
+      });
+
+      if (cumulativeProb >= 1) {
+        break;
+      }
+    }
+
+    setData(tempData);
+  };
+
   useEffect(() => {
     if (numServers > 0 && Number.isInteger(numServers)) {
       const generatedServersData = Array.from(
@@ -111,32 +139,12 @@ export default function PoissonDistribution() {
   }, [numServers, arrivalTimes, departureTimes, serviceTimes]);
 
  
-  const generateRandomPriorities = () => {
-    const lcgNumbers = [];
-    const rnValues = [];
-
-    let Z = parseInt(Z0);
-
-    for (let i = 0; i < n; i++) {
-      const R = (parseInt(A) * Z + parseInt(C)) % parseInt(M);
-      lcgNumbers.push(R);
-      rnValues.push(R / parseInt(M));
-      Z = R;
-    }
-
-    const priorities = rnValues.map((rn) => (3 - 1) * rn + 1); // (b - a) * rn + a
-    const roundedPriorities = priorities.map((priority) =>
-      Math.round(priority)
-    );
-
-    setRandomPriorities(roundedPriorities);
-  };
-
+ 
   //
 
   const generateServiceTimes = () => {
     const generatedServiceTimes = [];
-    for (let i = 0; i < serviceCount; i++) {
+    for (let i = 0; i < data.length; i++) {
       const randomValue = Math.random();
       const serviceTime = -mu * Math.log(randomValue).toFixed(4);
       generatedServiceTimes.push(serviceTime);
@@ -144,47 +152,21 @@ export default function PoissonDistribution() {
     setServiceTimes(generatedServiceTimes);
   };
 
-  const generateDepartureTimes = () => {
-    const generatedDepartureTimes = [];
-    let prevDepartureTime = 0;
+  // const generateDepartureTimes = () => {
+  //   const generatedDepartureTimes = [];
+  //   let prevDepartureTime = 0;
 
-    for (let i = 0; i < serviceTimes.length; i++) {
-      const serviceTime = serviceTimes[i];
-      const departureTime =
-        Math.max(arrivalTimes[i], prevDepartureTime) + serviceTime;
-      generatedDepartureTimes.push(departureTime);
-      prevDepartureTime = departureTime;
-    }
+  //   for (let i = 0; i < serviceTimes.length; i++) {
+  //     const serviceTime = serviceTimes[i];
+  //     const departureTime =
+  //       Math.max(arrivalTimes[i], prevDepartureTime) + serviceTime;
+  //     generatedDepartureTimes.push(departureTime);
+  //     prevDepartureTime = departureTime;
+  //   }
 
-    setDepartureTimes(generatedDepartureTimes);
-  };
+  //   setDepartureTimes(generatedDepartureTimes);
+  // };
 
-  const calculateCumulativeProbability = () => {
-    let cumulativeProb = 0;
-    const tempData = [];
-
-    for (let k = 0; ; k++) {
-      const poissonProb = calculatePoissonProbability(k, parseFloat(lambda));
-      cumulativeProb += poissonProb;
-
-      const lookup =
-        tempData.length === 0
-          ? 0
-          : tempData[tempData.length - 1].cumulativeProb;
-
-      tempData.push({
-        interval: k,
-        cumulativeProb: cumulativeProb,
-        lookup: lookup,
-      });
-
-      if (cumulativeProb >= 1) {
-        break;
-      }
-    }
-
-    setData(tempData);
-  };
 
   const generateInterArrivalTimes = () => {
     const generatedInterArrivalTimes = [];
@@ -193,7 +175,7 @@ export default function PoissonDistribution() {
     if (data.length > 0) {
       generatedInterArrivalTimes.push(0); // First inter-arrival time is 0
 
-      for (let i = 1; i < 10; i++) {
+      for (let i = 1; i < data.length; i++) {
         const randomNum = Math.random();
         const selectedData = data.find(
           (row) => randomNum >= row.lookup && randomNum <= row.cumulativeProb
@@ -209,27 +191,17 @@ export default function PoissonDistribution() {
     setInterArrivalTimes(generatedInterArrivalTimes);
   };
 
-  // Update arrival times logic
-// const generateArrivalTimes = () => {
-//   const generatedArrivalTimes = [0]; // First arrival time is 0
-//   let prevArrivalTime = 0;
-
-//   for (let i = 1; i < interArrivalTimes.length; i++) {
-//     const interArrivalTime = interArrivalTimes[i - 1]; // Use previous inter-arrival time
-//     const currentArrivalTime = prevArrivalTime + interArrivalTime;
-//     generatedArrivalTimes.push(currentArrivalTime);
-//     prevArrivalTime = currentArrivalTime;
-//   }
-
-//   setArrivalTimes(generatedArrivalTimes);
-// };
+  
 const generateArrivalTimes = () => {
   const generatedArrivalTimes = [0]; // First arrival time is 0
   let prevArrivalTime = 0;
 
   for (let i = 1; i < interArrivalTimes.length; i++) {
     const interArrivalTime = interArrivalTimes[i];
+    console.log(`Inter-Arrival Time[${i}]: ${interArrivalTime}`);
+
     const currentArrivalTime = prevArrivalTime + interArrivalTime;
+    console.log(`Current Arrival Time[${i}]: ${currentArrivalTime}`);
     generatedArrivalTimes.push(currentArrivalTime);
     prevArrivalTime = currentArrivalTime;
   }
@@ -237,6 +209,20 @@ const generateArrivalTimes = () => {
   setArrivalTimes(generatedArrivalTimes);
 };
 
+//  useEffect(() => {
+//     if (data.length > 0) {
+//       const generatedInterArrivalTimes = generateInterArrivalTimes();
+//       const generatedArrivalTimes = generateArrivalTimes(generatedInterArrivalTimes);
+
+//       console.log("Generated Inter-Arrival Times:", generatedInterArrivalTimes);
+//       console.log("Generated Arrival Times:", generatedArrivalTimes);
+
+//       setInterArrivalTimes(generatedInterArrivalTimes);
+//       setArrivalTimes(generatedArrivalTimes);
+//     }
+//   }, [data]);
+
+//
 
   // const generateGanttData = () => {
   //   const ganttData = [];
@@ -308,27 +294,49 @@ const generateArrivalTimes = () => {
   //     },
   //   },
   // };
-  const initialServersData = Array.from({ length: numServers }, (_, index) => {
-    return {
-      tasks: [],
-      queue: [], // Queue for tasks waiting to be processed
-    };
-  });
 
-  // Calculate turnaround time (Ending Time - Arrival Time)
-  const calculateTurnaroundTime = (task) => {
-    return (task.endingTime - task.arrivalTime).toFixed(2);
-  };
+  const generateRandomPriorities = () => {
+    const lcgNumbers = [];
+    const rnValues = [];
 
-  // Calculate waiting time (Starting Time - Arrival Time)
-  const calculateWaitingTime = (task) => {
-    return (task.startingTime - task.arrivalTime).toFixed(2);
-  };
+    let Z = parseInt(Z0);
 
-  // Calculate response time (Starting Time - Arrival Time)
-  const calculateResponseTime = (task) => {
-    return (task.startingTime - task.arrivalTime).toFixed(2);
-  };
+    for (let i = 0; i < interArrivalTimes.length; i++) {
+        const R = (parseInt(A) * Z + parseInt(C)) % parseInt(M);
+        lcgNumbers.push(R);
+        rnValues.push(R / parseInt(M));
+        Z = R;
+    }
+
+    const priorities = rnValues.map((rn) => (3 - 1) * rn + 1); // (b - a) * rn + a
+    const roundedPriorities = priorities.map((priority) =>
+        Math.round(priority)
+    );
+
+    setRandomPriorities(roundedPriorities);
+};
+
+  // const initialServersData = Array.from({ length: numServers }, (_, index) => {
+  //   return {
+  //     tasks: [],
+  //     queue: [], // Queue for tasks waiting to be processed
+  //   };
+  // });
+
+  // // Calculate turnaround time (Ending Time - Arrival Time)
+  // const calculateTurnaroundTime = (task) => {
+  //   return (task.endingTime - task.arrivalTime).toFixed(2);
+  // };
+
+  // // Calculate waiting time (Starting Time - Arrival Time)
+  // const calculateWaitingTime = (task) => {
+  //   return (task.startingTime - task.arrivalTime).toFixed(2);
+  // };
+
+  // // Calculate response time (Starting Time - Arrival Time)
+  // const calculateResponseTime = (task) => {
+  //   return (task.startingTime - task.arrivalTime).toFixed(2);
+  // };
 
   const generateGanttData = () => {
     const ganttData = [];
@@ -339,51 +347,20 @@ const generateArrivalTimes = () => {
         const arrivalTime = arrivalTimes[i];
         const serviceTime = serviceTimes[i];
         const priority = randomPriorities[i];
+        let availableServer = -1;
 
         // Find the first available server within the limit of numServers
-        let availableServer = servers.findIndex(
-            (server, index) => server.endTime <= arrivalTime && index < numServers
-        );
-
-        // Check if there are tasks in the queue that were interrupted by higher priority tasks
-        const interruptedTask = queue.find(task => task.arrivalTime <= servers[availableServer].endTime && task.priority > priority);
-
-        if (interruptedTask) {
-            const startingTime = servers[availableServer].endTime;
-            const endingTime = startingTime + interruptedTask.serviceTime;
-            servers[availableServer] = { endTime: endingTime };
-
-            const task = {
-                index: interruptedTask.index,
-                arrivalTime: interruptedTask.arrivalTime,
-                serviceTime: interruptedTask.serviceTime,
-                priority: interruptedTask.priority,
-                startingTime,
-                endingTime,
-                serverNumber: availableServer + 1,
-                turnaroundTime: (endingTime - interruptedTask.arrivalTime).toFixed(4),
-                waitingTime: (startingTime - interruptedTask.arrivalTime).toFixed(4),
-                responseTime: (startingTime - interruptedTask.arrivalTime).toFixed(4),
-            };
-
-            ganttData.push(task);
-            // Remove the interrupted task from the queue
-            queue.splice(queue.indexOf(interruptedTask), 1);
+        for (let index = 0; index < numServers; index++) {
+            if (servers[index]?.endTime <= arrivalTime) {
+                availableServer = index;
+                break;
+            }
         }
 
-        // If no available server found within the limit, place the task in the queue
         if (availableServer === -1) {
-            queue.push({
-                index: i + 1,
-                arrivalTime,
-                serviceTime,
-                priority,
-            });
+            queue.push({ i, arrivalTime, serviceTime, priority });
         } else {
-            const startingTime = Math.max(
-                arrivalTime,
-                servers[availableServer - 1]?.endTime || 0
-            );
+            const startingTime = Math.max(arrivalTime, servers[availableServer - 1]?.endTime || 0);
             const endingTime = startingTime + serviceTime;
             servers[availableServer] = { endTime: endingTime };
 
@@ -404,37 +381,40 @@ const generateArrivalTimes = () => {
         }
     }
 
-    // Add tasks from the queue to the ganttData
-    queue.forEach((task) => {
-        const availableServer = servers.findIndex(
-            (server) => server.endTime <= task.arrivalTime
-        );
-        const startingTime =
-            Math.max(
-                task.arrivalTime,
-                servers[availableServer - 1]?.endTime || 0
-            ) || task.arrivalTime;
-        const endingTime = (startingTime + task.serviceTime).toFixed(4);
+    queue.forEach(({ i, arrivalTime, serviceTime, priority }) => {
+        let availableServer = -1;
+        for (let index = 0; index < numServers; index++) {
+            if (servers[index]?.endTime <= arrivalTime) {
+                availableServer = index;
+                break;
+            }
+        }
+
+        const startingTime = Math.max(arrivalTime, servers[availableServer - 1]?.endTime || 0);
+        const endingTime = startingTime + serviceTime;
         servers[availableServer] = { endTime: endingTime };
 
         const queuedTask = {
-            ...task,
+            index: i + 1,
+            arrivalTime,
+            serviceTime,
+            priority,
             startingTime,
             endingTime,
             serverNumber: availableServer + 1,
-            turnaroundTime: (endingTime - task.arrivalTime).toFixed(4),
-            waitingTime: (startingTime - task.arrivalTime).toFixed(4),
-            responseTime: (startingTime - task.arrivalTime).toFixed(4),
+            turnaroundTime: (endingTime - arrivalTime).toFixed(4),
+            waitingTime: (startingTime - arrivalTime).toFixed(4),
+            responseTime: (startingTime - arrivalTime).toFixed(4),
         };
 
         ganttData.push(queuedTask);
     });
 
-    // Sort the ganttData by arrivalTime for proper ordering
     ganttData.sort((a, b) => a.arrivalTime - b.arrivalTime);
 
     setTasks(ganttData);
 };
+
 
 
   return (
@@ -589,7 +569,7 @@ const generateArrivalTimes = () => {
               {interArrivalTimes.map((time, index) => (
                 <tr key={index}>
                   <td>{index + 1}</td>
-                  <td>{time}</td>
+                  <td>{interArrivalTimes[index]}</td>
                   <td>{arrivalTimes[index]}</td>
                  <td>{Math.floor(serviceTimes[index] + 1)}</td>
 
@@ -643,7 +623,7 @@ const generateArrivalTimes = () => {
           generateInterArrivalTimes();
           generateArrivalTimes();
           generateServiceTimes();
-          generateDepartureTimes();
+          // generateDepartureTimes();
           generateRandomPriorities();
           generateGanttData();
         }}
