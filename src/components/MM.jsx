@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
-import { Bar } from "react-chartjs-2";
+// import { Bar } from "react-chartjs-2";
 import GanttChart from "./GanttChart";
+// import '../index.css'
 
 function calculatePoissonProbability(k, lambda) {
   const eToMinusLambda = Math.exp(-lambda);
@@ -83,7 +84,7 @@ export default function PoissonDistribution() {
   //   departureTimes,
   //   randomPriorities,
   // ]);
-  
+
   const calculateCumulativeProbability = () => {
     let cumulativeProb = 0;
     const tempData = [];
@@ -134,12 +135,9 @@ export default function PoissonDistribution() {
     } else {
       // Handle invalid input (e.g., show an error message)
       console.error("Invalid number of servers.");
-      // You might want to set serversData to an empty array or handle this case differently
     }
   }, [numServers, arrivalTimes, departureTimes, serviceTimes]);
 
- 
- 
   //
 
   const generateServiceTimes = () => {
@@ -151,22 +149,6 @@ export default function PoissonDistribution() {
     }
     setServiceTimes(generatedServiceTimes);
   };
-
-  // const generateDepartureTimes = () => {
-  //   const generatedDepartureTimes = [];
-  //   let prevDepartureTime = 0;
-
-  //   for (let i = 0; i < serviceTimes.length; i++) {
-  //     const serviceTime = serviceTimes[i];
-  //     const departureTime =
-  //       Math.max(arrivalTimes[i], prevDepartureTime) + serviceTime;
-  //     generatedDepartureTimes.push(departureTime);
-  //     prevDepartureTime = departureTime;
-  //   }
-
-  //   setDepartureTimes(generatedDepartureTimes);
-  // };
-
 
   const generateInterArrivalTimes = () => {
     const generatedInterArrivalTimes = [];
@@ -191,109 +173,22 @@ export default function PoissonDistribution() {
     setInterArrivalTimes(generatedInterArrivalTimes);
   };
 
-  
-const generateArrivalTimes = () => {
-  const generatedArrivalTimes = [0]; // First arrival time is 0
-  let prevArrivalTime = 0;
+  const generateArrivalTimes = () => {
+    const generatedArrivalTimes = [0]; // First arrival time is 0
+    let prevArrivalTime = 0;
 
-  for (let i = 1; i < interArrivalTimes.length; i++) {
-    const interArrivalTime = interArrivalTimes[i];
-    console.log(`Inter-Arrival Time[${i}]: ${interArrivalTime}`);
+    for (let i = 1; i < interArrivalTimes.length; i++) {
+      const interArrivalTime = interArrivalTimes[i];
+      console.log(`Inter-Arrival Time[${i}]: ${interArrivalTime}`);
 
-    const currentArrivalTime = prevArrivalTime + interArrivalTime;
-    console.log(`Current Arrival Time[${i}]: ${currentArrivalTime}`);
-    generatedArrivalTimes.push(currentArrivalTime);
-    prevArrivalTime = currentArrivalTime;
-  }
+      const currentArrivalTime = prevArrivalTime + interArrivalTime;
+      console.log(`Current Arrival Time[${i}]: ${currentArrivalTime}`);
+      generatedArrivalTimes.push(currentArrivalTime);
+      prevArrivalTime = currentArrivalTime;
+    }
 
-  setArrivalTimes(generatedArrivalTimes);
-};
-
-//  useEffect(() => {
-//     if (data.length > 0) {
-//       const generatedInterArrivalTimes = generateInterArrivalTimes();
-//       const generatedArrivalTimes = generateArrivalTimes(generatedInterArrivalTimes);
-
-//       console.log("Generated Inter-Arrival Times:", generatedInterArrivalTimes);
-//       console.log("Generated Arrival Times:", generatedArrivalTimes);
-
-//       setInterArrivalTimes(generatedInterArrivalTimes);
-//       setArrivalTimes(generatedArrivalTimes);
-//     }
-//   }, [data]);
-
-//
-
-  // const generateGanttData = () => {
-  //   const ganttData = [];
-
-  //   for (let i = 0; i < numServers; i++) {
-  //     const serverData = {
-  //       label: `Server ${i + 1}`,
-  //       data: [],
-  //       backgroundColor: `rgba(${Math.floor(Math.random() * 256)}, ${Math.floor(
-  //         Math.random() * 256
-  //       )}, ${Math.floor(Math.random() * 256)}, 0.6)`,
-  //     };
-
-  //     for (let j = 0; j < interArrivalTimes.length; j++) {
-  //       const arrivalTime = arrivalTimes[j];
-  //       const serviceTime = serviceTimes[j];
-  //       const priority = randomPriorities[j];
-
-  //       serverData.data.push({
-  //         x: arrivalTime,
-  //         y: serviceTime,
-  //         priority: priority,
-  //       });
-  //     }
-
-  //     ganttData.push(serverData);
-  //   }
-
-  //   return ganttData;
-  // };
-
-  // const ganttData = generateGanttData();
-
-  // const options = {
-  //   scales: {
-  //     xAxes: [
-  //       {
-  //         type: "linear", // Use linear scale for numeric data
-  //         position: "bottom",
-  //         scaleLabel: {
-  //           display: true,
-  //           labelString: "Time", // Label for the x-axis
-  //         },
-  //         ticks: {
-  //           beginAtZero: true, // Start the scale at zero
-  //         },
-  //       },
-  //     ],
-  //     yAxes: [
-  //       {
-  //         stacked: true,
-  //         scaleLabel: {
-  //           display: true,
-  //           labelString: "Service Time", // Label for the y-axis
-  //         },
-  //       },
-  //     ],
-  //   },
-  //   tooltips: {
-  //     callbacks: {
-  //       title: (tooltipItem, data) => {
-  //         return `Server ${tooltipItem[0].datasetIndex + 1}`;
-  //       },
-  //       label: (tooltipItem, data) => {
-  //         const dataset = data.datasets[tooltipItem.datasetIndex];
-  //         const item = dataset.data[tooltipItem.index];
-  //         return `Arrival Time: ${item.x}, Service Time: ${item.y}, Priority: ${item.priority}`;
-  //       },
-  //     },
-  //   },
-  // };
+    setArrivalTimes(generatedArrivalTimes);
+  };
 
   const generateRandomPriorities = () => {
     const lcgNumbers = [];
@@ -302,41 +197,19 @@ const generateArrivalTimes = () => {
     let Z = parseInt(Z0);
 
     for (let i = 0; i < interArrivalTimes.length; i++) {
-        const R = (parseInt(A) * Z + parseInt(C)) % parseInt(M);
-        lcgNumbers.push(R);
-        rnValues.push(R / parseInt(M));
-        Z = R;
+      const R = (parseInt(A) * Z + parseInt(C)) % parseInt(M);
+      lcgNumbers.push(R);
+      rnValues.push(R / parseInt(M));
+      Z = R;
     }
 
     const priorities = rnValues.map((rn) => (b - a) * rn + a); // (b - a) * rn + a
     const roundedPriorities = priorities.map((priority) =>
-        Math.round(priority)
+      Math.round(priority)
     );
 
     setRandomPriorities(roundedPriorities);
-};
-
-  // const initialServersData = Array.from({ length: numServers }, (_, index) => {
-  //   return {
-  //     tasks: [],
-  //     queue: [], // Queue for tasks waiting to be processed
-  //   };
-  // });
-
-  // // Calculate turnaround time (Ending Time - Arrival Time)
-  // const calculateTurnaroundTime = (task) => {
-  //   return (task.endingTime - task.arrivalTime).toFixed(2);
-  // };
-
-  // // Calculate waiting time (Starting Time - Arrival Time)
-  // const calculateWaitingTime = (task) => {
-  //   return (task.startingTime - task.arrivalTime).toFixed(2);
-  // };
-
-  // // Calculate response time (Starting Time - Arrival Time)
-  // const calculateResponseTime = (task) => {
-  //   return (task.startingTime - task.arrivalTime).toFixed(2);
-  // };
+  };
 
   const generateGanttData = () => {
     const ganttData = [];
@@ -344,83 +217,90 @@ const generateArrivalTimes = () => {
     const queue = [];
 
     for (let i = 0; i < interArrivalTimes.length; i++) {
-        const arrivalTime = arrivalTimes[i];
-        const serviceTime = serviceTimes[i];
-        const priority = randomPriorities[i];
-        let availableServer = -1;
+      const arrivalTime = arrivalTimes[i];
+      const serviceTime = serviceTimes[i];
+      const priority = randomPriorities[i];
+      let availableServer = -1;
 
-        // Find the first available server within the limit of numServers
-        for (let index = 0; index < numServers; index++) {
-            if (servers[index]?.endTime <= arrivalTime) {
-                availableServer = index;
-                break;
-            }
+      // Find the first available server within the limit of numServers
+      for (let index = 0; index < numServers; index++) {
+        if (servers[index]?.endTime <= arrivalTime) {
+          availableServer = index;
+          break;
         }
+      }
 
-        if (availableServer === -1) {
-            queue.push({ i, arrivalTime, serviceTime, priority });
-        } else {
-            const startingTime = Math.max(arrivalTime, servers[availableServer - 1]?.endTime || 0);
-            const endingTime = startingTime + serviceTime;
-            servers[availableServer] = { endTime: endingTime };
-
-            const task = {
-                index: i + 1,
-                arrivalTime,
-                serviceTime,
-                priority,
-                startingTime,
-                endingTime,
-                serverNumber: availableServer + 1,
-                turnaroundTime: (endingTime - arrivalTime).toFixed(4),
-                waitingTime: (startingTime - arrivalTime).toFixed(4),
-                responseTime: (startingTime - arrivalTime).toFixed(4),
-            };
-
-            ganttData.push(task);
-        }
-    }
-
-    queue.forEach(({ i, arrivalTime, serviceTime, priority }) => {
-        let availableServer = -1;
-        for (let index = 0; index < numServers; index++) {
-            if (servers[index]?.endTime <= arrivalTime) {
-                availableServer = index;
-                break;
-            }
-        }
-
-        const startingTime = Math.max(arrivalTime, servers[availableServer - 1]?.endTime || 0);
+      if (availableServer === -1) {
+        queue.push({ i, arrivalTime, serviceTime, priority });
+      } else {
+        const startingTime = Math.max(
+          arrivalTime,
+          servers[availableServer - 1]?.endTime || 0
+        );
         const endingTime = startingTime + serviceTime;
         servers[availableServer] = { endTime: endingTime };
 
-        const queuedTask = {
-            index: i + 1,
-            arrivalTime,
-            serviceTime,
-            priority,
-            startingTime,
-            endingTime,
-            serverNumber: availableServer + 1,
-            turnaroundTime: (endingTime - arrivalTime).toFixed(4),
-            waitingTime: (startingTime - arrivalTime).toFixed(4),
-            responseTime: (startingTime - arrivalTime).toFixed(4),
+        const task = {
+          index: i + 1,
+          arrivalTime,
+          serviceTime,
+          priority,
+          startingTime,
+          endingTime,
+          serverNumber: availableServer + 1,
+          turnaroundTime: (endingTime - arrivalTime).toFixed(4),
+          waitingTime: (startingTime - arrivalTime).toFixed(4),
+          responseTime: (startingTime - arrivalTime).toFixed(4),
         };
 
-        ganttData.push(queuedTask);
+        ganttData.push(task);
+      }
+    }
+
+    queue.forEach(({ i, arrivalTime, serviceTime, priority }) => {
+      let availableServer = -1;
+      for (let index = 0; index < numServers; index++) {
+        if (servers[index]?.endTime <= arrivalTime) {
+          availableServer = index;
+          break;
+        }
+      }
+
+      const startingTime = Math.max(
+        arrivalTime,
+        servers[availableServer - 1]?.endTime || 0
+      );
+      const endingTime = startingTime + serviceTime;
+      servers[availableServer] = { endTime: endingTime };
+
+      const queuedTask = {
+        index: i + 1,
+        arrivalTime,
+        serviceTime,
+        priority,
+        startingTime,
+        endingTime,
+        serverNumber: availableServer + 1,
+        turnaroundTime: (endingTime - arrivalTime).toFixed(4),
+        waitingTime: (startingTime - arrivalTime).toFixed(4),
+        responseTime: (startingTime - arrivalTime).toFixed(4),
+      };
+
+      ganttData.push(queuedTask);
     });
 
     ganttData.sort((a, b) => a.arrivalTime - b.arrivalTime);
 
     setTasks(ganttData);
-};
-
-
+  };
 
   return (
     <div className="text-center upr">
       {/* {serversData.length > 0 && <GanttChart serversData={serversData} />} */}
-      <h4 className="p-4">MM∞ Simulation Model</h4>
+      <h4 className="p-4">
+        {" "}
+        <u>MM∞ Simulation Model</u>
+      </h4>
       <label>
         Enter Number of Servers:
         <input
@@ -453,7 +333,7 @@ const generateArrivalTimes = () => {
         />
       </label>
       <div className="text-center upr">
-        <h4 className="p-4">Enter Values to Apply LCG Algorithm</h4>
+        <h5 className="p-4">Enter Values to Apply LCG Algorithm</h5>
         <label>
           Enter A:
           <input
@@ -516,28 +396,12 @@ const generateArrivalTimes = () => {
             onChange={(e) => setBValue(e.target.value)}
           />
         </label>
-      
       </div>
-      {/* <Bar data={{ datasets: ganttData }} options={options} /> */}
-      {/* <button
-        className="btn btn-light"
-        onClick={() => {
-          calculateCumulativeProbability();
-          generateInterArrivalTimes();
-          generateArrivalTimes();
-          generateServiceTimes();
-          generateDepartureTimes();
-          generateRandomPriorities();
-          generateGanttData();
-        }}
-        disabled={!lambda || !mu || !A || !Z0 || !C || !M || !n}
-      >
-        Go
-      </button> */}
+
       <br />
-      <GanttChart tasks={tasks} />;
+
       {/* {serversData.length > 0 && <GanttChart serversData={serversData} />} */}
-      {data.length > 0 && (
+      {/* {data.length > 0 && (
         <div className="mt-4">
           <h5>Cumulative Poisson Probability Table:</h5>
           <table className="table">
@@ -559,82 +423,42 @@ const generateArrivalTimes = () => {
             </tbody>
           </table>
         </div>
-      )}
-      {/* Button to generate inter-arrival times */}
-      {/* <button
-        className="btn btn-light mt-2"
-        onClick={generateInterArrivalTimes}
-        disabled={!data.length}
-      >
-        Generate Inter-Arrival Times
-      </button> */}
-      {/* Table for Inter-Arrival Times */}
-      {interArrivalTimes.length > 0 && (
-        <div className="mt-4">
-          <h5>Generated Inter-Arrival and Service Times:</h5>
-          <table className="table">
-            <thead>
-              <tr>
-                <th>Index</th>
-                <th>Inter-Arrival Time</th>
-                <th>Arrival Time</th>
-                <th>Service Time</th>
-                <th>Priority</th>
-                {/* <th>Departure Time</th> */}
-              </tr>
-            </thead>
-            <tbody>
-              {interArrivalTimes.map((time, index) => (
-                <tr key={index}>
-                  <td>{index + 1}</td>
-                  <td>{interArrivalTimes[index]}</td>
-                  <td>{arrivalTimes[index]}</td>
-                 <td>{Math.floor(serviceTimes[index] + 1)}</td>
+      )} */}
+      <div >
+        {interArrivalTimes.length > 0 && (
+          <div className="mt-4">
+            <h5>Generated Inter-Arrival and Service Times :</h5>
+            <table className="table tbl">
+              <thead>
+                <tr>
+                  <th>Index</th>
+                  {/* <th>Inter-Arrival Time</th> */}
+                  <th>Arrival Time</th>
+                  <th>Service Time</th>
+                  <th>Priority</th>
+                  {/* <th>Departure Time</th> */}
+                </tr>
+              </thead>
+              <tbody>
+                {interArrivalTimes.map((time, index) => (
+                  <tr key={index}>
+                    <td>{index + 1}</td>
+                    {/* <td>{interArrivalTimes[index]}</td> */}
+                    <td>{arrivalTimes[index]}</td>
+                    <td>{Math.floor(serviceTimes[index] + 1)}</td>
 
-                  <td>{randomPriorities[index]}</td>
-                  {/* <td>{departureTimes[index]}</td> */}
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      )}
-      {tasks.length > 0 && (
-        <div className="mt-4">
-          <h5>Task Metrics:</h5>
-          <table className="table">
-            <thead>
-              <tr>
-                <th>Index</th>
-                {/* <th>Arrival Time</th> */}
-                {/* <th>service</th> */}
-                <th>Server n0.</th>
-                <th>Starting Time</th>
-                <th>Ending Time</th>
-                <th>Turnaround Time</th>
-                <th>Waiting Time</th>
-                <th>Response Time</th>
-              </tr>
-            </thead>
-            <tbody>
-              {tasks.map((task) => (
-                <tr key={task.index}>
-                  <td>{task.index}</td>
-                  {/* <td>{task.arrivalTime}</td> */}
-                  {/* <td>{task.serviceTime}</td> */}
-                  <td>{task.serverNumber}</td>
-                  <td>{Math.floor(task.startingTime)}</td>
-                  <td>{Math.floor(task.endingTime)}</td>
-                  <td>{task.turnaroundTime}</td>
-                  <td>{task.waitingTime}</td>
-                  <td>{task.responseTime}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      )}
-        <button
+                    <td>{randomPriorities[index]}</td>
+                    {/* <td>{departureTimes[index]}</td> */}
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )}
+      </div>
+      <h5>Gantt Chart : </h5>
+      <GanttChart tasks={tasks} />
+      <button
         className="btn btn-light"
         onClick={() => {
           calculateCumulativeProbability();
