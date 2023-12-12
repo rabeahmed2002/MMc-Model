@@ -1,0 +1,28 @@
+.gantt-chart {
+    position: relative;
+    padding: 20px;
+    border: 1px solid #ccc;
+  }
+  
+  .time-axis {
+    display: flex;
+    justify-content: space-between;
+  }
+  
+  .time-tick {
+    text-align: center;
+  }
+  
+  .tasks {
+    position: relative;
+  }
+  
+  .task {
+    position: absolute;
+    height: 20px;
+    border-radius: 5px;
+    color: white;
+    padding: 2px;
+    text-align: center;
+    margin-top: 5px;
+  }
